@@ -1,5 +1,6 @@
-import { Car, HandCoins, MessageCircleQuestion, Search, Ship } from "lucide-react";
+import { Car, HandCoins, Search, Ship } from "lucide-react";
 import Link from "next/link";
+import { AdvisoryModal } from "@/components/advisory-modal";
 import { VehicleCard } from "@/components/vehicle-card";
 import { listVehicles } from "@/lib/vehicle-store";
 import { cn } from "@/lib/utils";
@@ -8,7 +9,6 @@ const journeySteps = [
   { icon: Car, title: "Comprar", subtitle: "Explora el catálogo verificado", href: "/catalogo" },
   { icon: HandCoins, title: "Vender", subtitle: "Valoración gratuita de tu auto", href: null },
   { icon: Ship, title: "Importar", subtitle: "Cotiza impuestos y logística", href: null },
-  { icon: MessageCircleQuestion, title: "Asesoría", subtitle: "Habla con un experto", href: null },
 ];
 
 export default function Home() {
@@ -67,6 +67,7 @@ export default function Home() {
             </div>
           );
         })}
+        <AdvisoryModal />
       </section>
 
       <section className="space-y-4">
