@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
+/*
+ * Componente de color único de Autoventas Dan.
+ * Dirección de marca: "Ámbar afinado" (grafito cálido + ámbar desaturado + petróleo).
+ * Para cambiar la paleta del sitio completo, edita SOLO los valores hex de este bloque.
+ * Todo lo demás (componentes, utilidades de Tailwind) consume estos tokens por nombre,
+ * nunca hex directo, así que un cambio aquí se propaga a toda la app.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #1b1712;
+  --surface: #241f19;
+  --surface-hover: #2c261e;
+  --foreground: #f3efe8;
+  --muted: #a39a8e;
+  --border: #33291f;
+
+  --accent: #c77b4a;
+  --accent-hover: #d68f5f;
+  --accent-foreground: #2e1a0c;
+
+  --petrol: #2c5b57;
+  --petrol-foreground: #ffffff;
+
+  --success-soft: #2a3a2c;
+  --success-soft-foreground: #9fcba4;
+  --accent-soft: #3a2d20;
+  --accent-soft-foreground: #d9a47c;
+  --petrol-soft: #22322f;
+  --petrol-soft-foreground: #8fbeb6;
+
+  --danger: #e2897c;
+  --danger-soft: #3a201c;
+  --danger-soft-foreground: #e2897c;
+}
+
+.light {
+  --background: #f7f4ef;
+  --surface: #ffffff;
+  --surface-hover: #f0ebe2;
+  --foreground: #1b1712;
+  --muted: #7a7266;
+  --border: #e6dfd3;
+
+  --accent: #c77b4a;
+  --accent-hover: #b5693a;
+  --accent-foreground: #2e1a0c;
+
+  --petrol: #2c5b57;
+  --petrol-foreground: #ffffff;
+
+  --success-soft: #e3f0e5;
+  --success-soft-foreground: #3c6b41;
+  --accent-soft: #f6e6d8;
+  --accent-soft-foreground: #8a4e2a;
+  --petrol-soft: #e1eded;
+  --petrol-soft-foreground: #1f413e;
+
+  --danger: #b3402f;
+  --danger-soft: #f7e3e0;
+  --danger-soft-foreground: #8a2e20;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-muted: var(--muted);
+  --color-border: var(--border);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-petrol: var(--petrol);
+  --color-petrol-foreground: var(--petrol-foreground);
+
+  --color-success-soft: var(--success-soft);
+  --color-success-soft-foreground: var(--success-soft-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-foreground: var(--accent-soft-foreground);
+  --color-petrol-soft: var(--petrol-soft);
+  --color-petrol-soft-foreground: var(--petrol-soft-foreground);
+
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-soft-foreground: var(--danger-soft-foreground);
+
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-manrope);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), sans-serif;
+  transition: background 0.15s, color 0.15s;
 }

@@ -1,65 +1,87 @@
-import Image from "next/image";
+import { Car, HandCoins, MessageCircleQuestion, Search, Ship } from "lucide-react";
+import Link from "next/link";
+import { VehicleCard } from "@/components/vehicle-card";
+import { listVehicles } from "@/lib/vehicle-store";
+import { cn } from "@/lib/utils";
+
+const journeySteps = [
+  { icon: Car, title: "Comprar", subtitle: "Explora el catálogo verificado", href: "/catalogo" },
+  { icon: HandCoins, title: "Vender", subtitle: "Valoración gratuita de tu auto", href: null },
+  { icon: Ship, title: "Importar", subtitle: "Cotiza impuestos y logística", href: null },
+  { icon: MessageCircleQuestion, title: "Asesoría", subtitle: "Habla con un experto", href: null },
+];
 
 export default function Home() {
+  const featured = listVehicles()
+    .filter((v) => v.status === "Disponible")
+    .slice(0, 3);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="max-w-5xl mx-auto w-full px-6 py-14 space-y-14">
+      <section className="text-center space-y-5">
+        <h1 className="font-heading font-bold text-4xl leading-tight">
+          ¿Qué buscas hoy?
+        </h1>
+        <p className="text-sm text-muted max-w-md mx-auto">
+          Comprar, vender, importar o recibir asesoría automotriz, todo en un solo lugar.
+        </p>
+
+        <form action="/catalogo" method="GET" className="max-w-md mx-auto flex items-center gap-2 bg-surface border border-border rounded-lg px-3 py-2.5 focus-within:border-accent transition-colors">
+          <Search className="size-4 text-muted shrink-0" aria-hidden="true" />
+          <input
+            name="q"
+            placeholder="Ej. Honda CR-V 2021"
+            className="w-full bg-transparent text-sm text-foreground placeholder:text-muted outline-none"
+          />
+        </form>
+      </section>
+
+      <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {journeySteps.map((step) => {
+          const Icon = step.icon;
+          const content = (
+            <>
+              <Icon className="size-5 text-accent" aria-hidden="true" />
+              <span className="font-heading font-bold text-sm mt-2">{step.title}</span>
+              <span className="text-xs text-muted mt-1">{step.subtitle}</span>
+              {!step.href && (
+                <span className="text-[10px] text-muted mt-2 border border-border rounded-full px-2 py-0.5">
+                  Próximamente
+                </span>
+              )}
+            </>
+          );
+
+          const cardClasses = cn(
+            "flex flex-col items-center text-center bg-surface border border-border rounded-xl px-3 py-5 transition-colors",
+            step.href ? "hover:border-accent" : "opacity-60 cursor-default",
+          );
+
+          return step.href ? (
+            <Link key={step.title} href={step.href} className={cardClasses}>
+              {content}
+            </Link>
+          ) : (
+            <div key={step.title} className={cardClasses}>
+              {content}
+            </div>
+          );
+        })}
+      </section>
+
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="font-heading font-bold text-xl">Vehículos destacados</h2>
+          <Link href="/catalogo" className="text-sm text-accent hover:text-accent-hover transition-colors">
+            Ver todo el catálogo
+          </Link>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {featured.map((vehicle) => (
+            <VehicleCard key={vehicle.id} vehicle={vehicle} />
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }

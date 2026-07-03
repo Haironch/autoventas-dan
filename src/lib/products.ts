@@ -1,0 +1,58 @@
+import type { Product } from "@/lib/types";
+
+export const products: Product[] = [
+  {
+    id: "pastillas-freno-toyota",
+    name: "Pastillas de freno delanteras",
+    category: "Frenos",
+    price: 320,
+    inStock: true,
+    compatibility: "Toyota Corolla 2014–2022",
+    description: "Juego completo de pastillas cerámicas, baja generación de polvo.",
+  },
+  {
+    id: "filtro-aceite-universal",
+    name: "Filtro de aceite",
+    category: "Filtros",
+    price: 65,
+    inStock: true,
+    compatibility: "Honda / Toyota / Mazda (motores 1.8L–2.0L)",
+    description: "Filtro de rosca directa, cambio recomendado cada 5,000 km.",
+  },
+  {
+    id: "kit-luces-led-h11",
+    name: "Kit de luces LED H11",
+    category: "Iluminación",
+    price: 280,
+    inStock: true,
+    compatibility: "Universal, socket H11",
+    description: "6000K, mayor visibilidad nocturna, instalación plug and play.",
+  },
+  {
+    id: "aceite-sintetico-5w30",
+    name: "Aceite sintético 5W-30 (4L)",
+    category: "Lubricantes",
+    price: 210,
+    inStock: true,
+    compatibility: "Universal, motores gasolina",
+    description: "Sintético completo, protección en clima cálido y tráfico pesado.",
+  },
+  {
+    id: "tapetes-todo-clima",
+    name: "Tapetes todo clima",
+    category: "Accesorios",
+    price: 340,
+    inStock: false,
+    compatibility: "Honda CR-V 2017–2023",
+    description: "Juego de 4 piezas, resistentes al agua y fáciles de limpiar.",
+  },
+  {
+    id: "filtro-aire-alto-flujo",
+    name: "Filtro de aire de alto flujo",
+    category: "Filtros",
+    price: 145,
+    inStock: true,
+    compatibility: "Kia Rio / Hyundai Accent 2017–2022",
+    description: "Lavable y reutilizable, mejora la respuesta del motor.",
+  },
+];

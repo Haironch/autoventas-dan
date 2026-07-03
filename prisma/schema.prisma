@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Transmission {
+  AUTOMATICO
+  MANUAL
+}
+
+enum FuelType {
+  GASOLINA
+  DIESEL
+  HIBRIDO
+  ELECTRICO
+}
+
+enum VehicleStatus {
+  DISPONIBLE
+  RESERVADO
+  VENDIDO
+}
+
+enum BodyType {
+  SEDAN
+  HATCHBACK
+  SUV
+  PICKUP
+}
+
+model Vehicle {
+  id                       String        @id @default(cuid())
+  brand                    String
+  model                    String
+  year                     Int
+  price                    Int
+  mileageKm                Int
+  transmission             Transmission
+  fuelType                 FuelType
+  status                   VehicleStatus @default(DISPONIBLE)
+  isVerified               Boolean       @default(false)
+  description              String
+  bodyType                 BodyType
+  seats                    Int
+  engineDisplacementLiters Float
+  fuelConsumptionKmPerGalon Int
+  /// Frase curada por el administrador: para quién es ideal este vehículo.
+  idealFor                 String
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
+}
+
+enum ProductCategory {
+  FRENOS
+  FILTROS
+  ILUMINACION
+  LUBRICANTES
+  ACCESORIOS
+}
+
+model Product {
+  id            String          @id @default(cuid())
+  name          String
+  category      ProductCategory
+  price         Int
+  inStock       Boolean         @default(true)
+  compatibility String
+  description   String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model Accessory {
+  id          String   @id @default(cuid())
+  name        String
+  brand       String
+  price       Int
+  inStock     Boolean  @default(true)
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
