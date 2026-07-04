@@ -1,13 +1,15 @@
+import Image from "next/image";
 import Link from "next/link";
 import { CartIndicator } from "@/components/cart-indicator";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import logo from "../../../public/logo/Dan.png";
 
 export function Header() {
   return (
     <header className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border">
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="font-heading font-bold text-lg">
-          Autoventas <span className="text-accent">Dan</span>
+        <Link href="/" className="flex items-center">
+          <Image src={logo} alt="Autoventas Dan" className="h-10 w-auto" priority />
         </Link>
 
         <nav className="hidden sm:flex items-center gap-6 text-sm font-medium text-muted">
