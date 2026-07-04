@@ -17,7 +17,7 @@ interface CatalogoPageProps {
 
 export default async function CatalogoPage({ searchParams }: CatalogoPageProps) {
   const params = await searchParams;
-  const vehicles = listVehicles();
+  const vehicles = await listVehicles();
   const brands = Array.from(new Set(vehicles.map((v) => v.brand))).sort();
   const years = Array.from(new Set(vehicles.map((v) => v.year))).sort((a, b) => b - a);
 

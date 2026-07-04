@@ -36,19 +36,19 @@ function vehicleFromFormData(formData: FormData): Omit<Vehicle, "id"> {
 export async function deleteVehicleAction(formData: FormData) {
   const id = formData.get("id");
   if (typeof id === "string") {
-    deleteVehicle(id);
+    await deleteVehicle(id);
     revalidateVehiclePages();
   }
 }
 
 export async function createVehicleAction(formData: FormData) {
-  createVehicle(vehicleFromFormData(formData));
+  await createVehicle(vehicleFromFormData(formData));
   revalidateVehiclePages();
   redirect("/admin");
 }
 
 export async function updateVehicleAction(id: string, formData: FormData) {
-  updateVehicle(id, vehicleFromFormData(formData));
+  await updateVehicle(id, vehicleFromFormData(formData));
   revalidateVehiclePages();
   redirect("/admin");
 }

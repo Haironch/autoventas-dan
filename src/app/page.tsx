@@ -11,8 +11,8 @@ const journeySteps = [
   { icon: Ship, title: "Importar", subtitle: "Cotiza impuestos y logística", href: null },
 ];
 
-export default function Home() {
-  const featured = listVehicles()
+export default async function Home() {
+  const featured = (await listVehicles())
     .filter((v) => v.status === "Disponible")
     .slice(0, 3);
 

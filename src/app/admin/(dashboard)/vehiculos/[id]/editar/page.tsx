@@ -9,7 +9,7 @@ interface EditVehiclePageProps {
 
 export default async function EditVehiclePage({ params }: EditVehiclePageProps) {
   const { id } = await params;
-  const vehicle = getVehicleById(id);
+  const vehicle = await getVehicleById(id);
 
   if (!vehicle) {
     notFound();

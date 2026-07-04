@@ -23,7 +23,7 @@ interface VehicleDetailPageProps {
 
 export default async function VehicleDetailPage({ params }: VehicleDetailPageProps) {
   const { id } = await params;
-  const vehicle = getVehicleById(id);
+  const vehicle = await getVehicleById(id);
 
   if (!vehicle) {
     notFound();

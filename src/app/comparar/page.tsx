@@ -43,7 +43,7 @@ function optionLabel(v: Vehicle) {
 
 export default async function CompararPage({ searchParams }: CompararPageProps) {
   const params = await searchParams;
-  const vehicles = listVehicles();
+  const vehicles = await listVehicles();
   const slots = [params.v1, params.v2, params.v3];
   const selected = slots
     .map((id) => vehicles.find((v) => v.id === id))

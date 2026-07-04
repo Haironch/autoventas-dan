@@ -16,8 +16,8 @@ const currency = new Intl.NumberFormat("es-GT", {
   maximumFractionDigits: 0,
 });
 
-export default function AdminVehiclesPage() {
-  const vehicles = listVehicles();
+export default async function AdminVehiclesPage() {
+  const vehicles = await listVehicles();
 
   return (
     <div className="space-y-4">
