@@ -2,8 +2,7 @@
 
 import { MessageCircleQuestion, X } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const WHATSAPP_NUMBER = "50251667311";
+import { WHATSAPP_NUMBER } from "@/lib/constants";
 
 const QUESTIONS = [
   { id: "comprar", label: "¿Necesitas comprar un vehículo?", messageLabel: "Comprar un vehículo" },
