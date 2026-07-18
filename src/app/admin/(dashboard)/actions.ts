@@ -13,9 +13,18 @@ function revalidateVehiclePages() {
   revalidatePath("/");
 }
 
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_IMAGE_SIZE_BYTES = 8 * 1024 * 1024;
+
 async function resolveImageSlot(formData: FormData, index: number): Promise<string | null> {
   const file = formData.get(`image${index}`);
-  if (file instanceof File && file.size > 0) {
+  const isValidImage =
+    file instanceof File &&
+    file.size > 0 &&
+    file.size <= MAX_IMAGE_SIZE_BYTES &&
+    ALLOWED_IMAGE_TYPES.includes(file.type);
+
+  if (isValidImage) {
     const blob = await put(`vehicles/${Date.now()}-${file.name}`, file, {
       access: "public",
       addRandomSuffix: true,
