@@ -12,7 +12,7 @@ export function Header() {
           <Image src={logo} alt="Autoventas Dan" className="h-10 w-auto" priority />
         </Link>
 
-        <nav className="hidden sm:flex items-center gap-6 text-sm font-medium text-muted">
+        <nav className="max-sm:hidden sm:flex items-center gap-6 text-sm font-medium text-muted">
           <Link href="/catalogo" className="hover:text-foreground transition-colors">
             Catálogo
           </Link>
@@ -35,7 +35,7 @@ export function Header() {
           <ThemeToggle />
           <Link
             href="/catalogo"
-            className="hidden sm:inline-flex items-center font-heading font-bold text-sm px-4.5 py-2.5 rounded-lg bg-accent text-accent-foreground hover:bg-accent-hover transition-colors"
+            className="max-sm:hidden sm:inline-flex items-center font-heading font-bold text-sm px-4.5 py-2.5 rounded-lg bg-accent text-accent-foreground hover:bg-accent-hover transition-colors"
           >
             Ver catálogo
           </Link>

@@ -34,8 +34,39 @@ export default async function AdminVehiclesPage() {
         </Link>
       </div>
 
-      <Card className="overflow-x-auto">
-        <table className="w-full text-sm border-collapse min-w-[640px]">
+      <div className="sm:hidden space-y-3">
+        {vehicles.map((v) => (
+          <Card key={v.id} className="p-4 space-y-3">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="font-heading font-bold text-sm">
+                  {v.brand} {v.model} {v.year}
+                </p>
+                <p className="text-xs text-muted mt-0.5">{v.bodyType}</p>
+              </div>
+              <Badge variant={statusBadgeVariant[v.status]}>{v.status}</Badge>
+            </div>
+            <p className="font-heading font-bold text-accent">{currency.format(v.price)}</p>
+            <div className="flex items-center gap-4 border-t border-border pt-3">
+              <Link
+                href={`/admin/vehiculos/${v.id}/editar`}
+                className="text-sm text-accent hover:text-accent-hover transition-colors"
+              >
+                Editar
+              </Link>
+              <form action={deleteVehicleAction}>
+                <input type="hidden" name="id" value={v.id} />
+                <button type="submit" className="text-sm text-danger hover:opacity-80 transition-opacity">
+                  Eliminar
+                </button>
+              </form>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      <Card className="max-sm:hidden overflow-x-auto">
+        <table className="w-full text-sm border-collapse">
           <thead>
             <tr className="border-b border-border">
               <th className="text-left text-xs text-muted font-normal p-3">Vehículo</th>
