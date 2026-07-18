@@ -73,6 +73,7 @@ function toAppVehicle(record: VehicleRecord): Vehicle {
     engineDisplacementLiters: record.engineDisplacementLiters,
     fuelConsumptionKmPerGalon: record.fuelConsumptionKmPerGalon,
     idealFor: record.idealFor,
+    images: record.images,
   };
 }
 
@@ -94,6 +95,7 @@ function toDbData(data: Omit<Vehicle, "id">) {
     engineDisplacementLiters: data.engineDisplacementLiters,
     fuelConsumptionKmPerGalon: data.fuelConsumptionKmPerGalon,
     idealFor: data.idealFor,
+    images: data.images,
   };
 }
 

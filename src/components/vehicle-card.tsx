@@ -1,4 +1,5 @@
 import { Car } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -20,8 +21,18 @@ export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
   return (
     <Link href={`/catalogo/${vehicle.id}`} className="block group">
       <Card className="group-hover:border-accent transition-colors h-full">
-        <div className="h-32 bg-border/40 flex items-center justify-center text-muted">
-          <Car className="size-8" aria-hidden="true" />
+        <div className="relative h-32 bg-border/40 flex items-center justify-center text-muted overflow-hidden">
+          {vehicle.images[0] ? (
+            <Image
+              src={vehicle.images[0]}
+              alt={`${vehicle.brand} ${vehicle.model}`}
+              fill
+              sizes="(min-width: 640px) 33vw, 100vw"
+              className="object-cover"
+            />
+          ) : (
+            <Car className="size-8" aria-hidden="true" />
+          )}
         </div>
         <div className="p-4 space-y-1">
           <div className="flex items-start justify-between gap-2">

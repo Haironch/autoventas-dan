@@ -1,4 +1,5 @@
 import { Car, ChevronLeft } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
@@ -47,9 +48,26 @@ export default async function VehicleDetailPage({ params }: VehicleDetailPagePro
       </Link>
 
       <Card>
-        <div className="h-56 bg-border/40 flex items-center justify-center text-muted">
-          <Car className="size-14" aria-hidden="true" />
-        </div>
+        {vehicle.images.length > 0 ? (
+          <div className={vehicle.images.length > 1 ? "grid grid-cols-2 gap-0.5" : ""}>
+            {vehicle.images.map((src, i) => (
+              <div key={src} className="relative h-56 bg-border/40 overflow-hidden">
+                <Image
+                  src={src}
+                  alt={`${vehicle.brand} ${vehicle.model} - foto ${i + 1}`}
+                  fill
+                  sizes="(min-width: 768px) 640px, 100vw"
+                  className="object-cover"
+                  priority={i === 0}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="h-56 bg-border/40 flex items-center justify-center text-muted">
+            <Car className="size-14" aria-hidden="true" />
+          </div>
+        )}
 
         <div className="p-6 space-y-5">
           <div className="flex items-start justify-between gap-3">

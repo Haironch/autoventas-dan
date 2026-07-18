@@ -1,5 +1,6 @@
 "use server";
 
+import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createVehicle, deleteVehicle, updateVehicle } from "@/lib/vehicle-store";
@@ -12,7 +13,25 @@ function revalidateVehiclePages() {
   revalidatePath("/");
 }
 
-function vehicleFromFormData(formData: FormData): Omit<Vehicle, "id"> {
+async function resolveImageSlot(formData: FormData, index: number): Promise<string | null> {
+  const file = formData.get(`image${index}`);
+  if (file instanceof File && file.size > 0) {
+    const blob = await put(`vehicles/${Date.now()}-${file.name}`, file, {
+      access: "public",
+      addRandomSuffix: true,
+    });
+    return blob.url;
+  }
+
+  const existing = formData.get(`existingImage${index}`);
+  return typeof existing === "string" && existing ? existing : null;
+}
+
+async function vehicleFromFormData(formData: FormData): Promise<Omit<Vehicle, "id">> {
+  const images = (await Promise.all([resolveImageSlot(formData, 1), resolveImageSlot(formData, 2)])).filter(
+    (url): url is string => Boolean(url),
+  );
+
   return {
     brand: String(formData.get("brand")),
     model: String(formData.get("model")),
@@ -30,6 +49,7 @@ function vehicleFromFormData(formData: FormData): Omit<Vehicle, "id"> {
     isVerified: formData.get("isVerified") === "on",
     description: String(formData.get("description")),
     idealFor: String(formData.get("idealFor")),
+    images,
   };
 }
 
@@ -42,13 +62,13 @@ export async function deleteVehicleAction(formData: FormData) {
 }
 
 export async function createVehicleAction(formData: FormData) {
-  await createVehicle(vehicleFromFormData(formData));
+  await createVehicle(await vehicleFromFormData(formData));
   revalidateVehiclePages();
   redirect("/admin");
 }
 
 export async function updateVehicleAction(id: string, formData: FormData) {
-  await updateVehicle(id, vehicleFromFormData(formData));
+  await updateVehicle(id, await vehicleFromFormData(formData));
   revalidateVehiclePages();
   redirect("/admin");
 }

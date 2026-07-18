@@ -19,6 +19,7 @@ export const vehicles: Vehicle[] = [
     engineDisplacementLiters: 2.0,
     fuelConsumptionKmPerGalon: 38,
     idealFor: "Trayectos diarios en ciudad: bajo consumo y mantenimiento accesible.",
+    images: [],
   },
   {
     id: "honda-crv-2021",
@@ -38,6 +39,7 @@ export const vehicles: Vehicle[] = [
     engineDisplacementLiters: 1.5,
     fuelConsumptionKmPerGalon: 30,
     idealFor: "Familias que necesitan espacio y versatilidad para viajes.",
+    images: [],
   },
   {
     id: "kia-rio-2020",
@@ -57,6 +59,7 @@ export const vehicles: Vehicle[] = [
     engineDisplacementLiters: 1.4,
     fuelConsumptionKmPerGalon: 40,
     idealFor: "Primer carro: económico, ágil y de mantenimiento sencillo.",
+    images: [],
   },
   {
     id: "hyundai-tucson-2023",
@@ -76,6 +79,7 @@ export const vehicles: Vehicle[] = [
     engineDisplacementLiters: 1.6,
     fuelConsumptionKmPerGalon: 45,
     idealFor: "Eficiencia de combustible sin sacrificar espacio familiar.",
+    images: [],
   },
   {
     id: "mazda-3-2019",
@@ -95,6 +99,7 @@ export const vehicles: Vehicle[] = [
     engineDisplacementLiters: 2.0,
     fuelConsumptionKmPerGalon: 36,
     idealFor: "Manejo ágil y diseño, para quien se mueve solo por ciudad.",
+    images: [],
   },
   {
     id: "nissan-sentra-2018",
@@ -114,6 +119,7 @@ export const vehicles: Vehicle[] = [
     engineDisplacementLiters: 1.8,
     fuelConsumptionKmPerGalon: 35,
     idealFor: "Uso diario económico dentro de la ciudad.",
+    images: [],
   },
   {
     id: "mazda-cx5-2022",
@@ -133,6 +139,7 @@ export const vehicles: Vehicle[] = [
     engineDisplacementLiters: 2.5,
     fuelConsumptionKmPerGalon: 28,
     idealFor: "Viajes frecuentes y familias que necesitan más espacio de carga.",
+    images: [],
   },
   {
     id: "bmw-x3-2021",
@@ -152,5 +159,6 @@ export const vehicles: Vehicle[] = [
     engineDisplacementLiters: 2.0,
     fuelConsumptionKmPerGalon: 24,
     idealFor: "Quienes buscan lujo, potencia y espacio en un mismo vehículo.",
+    images: [],
   },
 ];

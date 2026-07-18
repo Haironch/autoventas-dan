@@ -22,6 +22,8 @@ export interface Vehicle {
   fuelConsumptionKmPerGalon: number;
   /** Frase curada por el administrador: para quién es ideal este vehículo. */
   idealFor: string;
+  /** URLs de Vercel Blob, máximo 2 fotos. */
+  images: string[];
 }
 
 export type ProductCategory = "Frenos" | "Filtros" | "Iluminación" | "Lubricantes" | "Accesorios";

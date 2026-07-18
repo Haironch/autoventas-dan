@@ -11,7 +11,7 @@ interface VehicleFormProps {
 
 export function VehicleForm({ vehicle, action, submitLabel }: VehicleFormProps) {
   return (
-    <form action={action} className="space-y-5">
+    <form action={action} encType="multipart/form-data" className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <TextField label="Marca" name="brand" defaultValue={vehicle?.brand} required />
         <TextField label="Modelo" name="model" defaultValue={vehicle?.model} required />
@@ -85,6 +85,33 @@ export function VehicleForm({ vehicle, action, submitLabel }: VehicleFormProps) 
           />
           Verificado
         </label>
+      </div>
+
+      <div className="space-y-2">
+        <p className="text-xs text-muted">Fotos (máximo 2)</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {[0, 1].map((index) => (
+            <div key={index} className="flex items-center gap-3">
+              {vehicle?.images[index] && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={vehicle.images[index]}
+                  alt=""
+                  className="size-12 rounded-lg object-cover border border-border shrink-0"
+                />
+              )}
+              <div className="flex-1 space-y-1">
+                <input type="hidden" name={`existingImage${index + 1}`} value={vehicle?.images[index] ?? ""} />
+                <input
+                  type="file"
+                  name={`image${index + 1}`}
+                  accept="image/*"
+                  className="w-full text-xs text-muted file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-accent-soft file:text-accent-soft-foreground file:font-medium file:text-xs hover:file:bg-accent-soft file:cursor-pointer cursor-pointer"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <Textarea label="Descripción" name="description" rows={3} defaultValue={vehicle?.description} required />

@@ -48,6 +48,8 @@ model Vehicle {
   seats                    Int
   engineDisplacementLiters Float
   fuelConsumptionKmPerGalon Int
+  /// URLs de Vercel Blob, máximo 2 fotos por vehículo.
+  images                   String[]      @default([])
   /// Frase curada por el administrador: para quién es ideal este vehículo.
   idealFor                 String
   createdAt                DateTime      @default(now())
