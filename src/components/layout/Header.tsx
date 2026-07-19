@@ -28,6 +28,9 @@ export function Header() {
           <Link href="/importar" className="hover:text-foreground transition-colors">
             Importar
           </Link>
+          <Link href="/vender" className="hover:text-foreground transition-colors">
+            Vender
+          </Link>
         </nav>
 
         <div className="flex items-center gap-3">

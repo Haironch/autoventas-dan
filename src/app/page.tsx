@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 const journeySteps = [
   { icon: Car, title: "Comprar", subtitle: "Explora el catálogo verificado", href: "/catalogo" },
-  { icon: HandCoins, title: "Vender", subtitle: "Valoración gratuita de tu auto", href: null },
+  { icon: HandCoins, title: "Vender", subtitle: "Valoración gratuita de tu auto", href: "/vender" },
   { icon: Ship, title: "Importar", subtitle: "Cotiza impuestos y logística", href: "/importar" },
 ];
 
