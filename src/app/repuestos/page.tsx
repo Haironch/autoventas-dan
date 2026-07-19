@@ -1,6 +1,6 @@
 import { ProductCard } from "@/components/product-card";
 import { Select } from "@/components/ui/Select";
-import { products } from "@/lib/products";
+import { listProducts } from "@/lib/product-store";
 import type { ProductCategory } from "@/lib/types";
 
 const CATEGORIES: ProductCategory[] = ["Frenos", "Filtros", "Iluminación", "Lubricantes", "Accesorios"];
@@ -11,6 +11,7 @@ interface RepuestosPageProps {
 
 export default async function RepuestosPage({ searchParams }: RepuestosPageProps) {
   const params = await searchParams;
+  const products = await listProducts();
   const results = params.categoria
     ? products.filter((p) => p.category === params.categoria)
     : products;

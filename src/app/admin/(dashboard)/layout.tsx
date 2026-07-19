@@ -26,6 +26,19 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
           </button>
         </form>
       </header>
+
+      <nav className="flex items-center gap-5 text-sm font-medium text-muted -mt-2">
+        <Link href="/admin" className="hover:text-foreground transition-colors">
+          Vehículos
+        </Link>
+        <Link href="/admin/repuestos" className="hover:text-foreground transition-colors">
+          Repuestos
+        </Link>
+        <Link href="/admin/accesorios" className="hover:text-foreground transition-colors">
+          Accesorios
+        </Link>
+      </nav>
+
       {children}
     </div>
   );

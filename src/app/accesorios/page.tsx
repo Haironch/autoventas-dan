@@ -1,6 +1,6 @@
 import { AccessoryCard } from "@/components/accessory-card";
 import { Select } from "@/components/ui/Select";
-import { accessories } from "@/lib/accessories";
+import { listAccessories } from "@/lib/accessory-store";
 
 interface AccesoriosPageProps {
   searchParams: Promise<{ marca?: string }>;
@@ -8,6 +8,7 @@ interface AccesoriosPageProps {
 
 export default async function AccesoriosPage({ searchParams }: AccesoriosPageProps) {
   const params = await searchParams;
+  const accessories = await listAccessories();
   const brands = Array.from(new Set(accessories.map((a) => a.brand))).sort();
   const results = params.marca ? accessories.filter((a) => a.brand === params.marca) : accessories;
 

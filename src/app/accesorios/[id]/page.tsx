@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import { accessories } from "@/lib/accessories";
+import { getAccessoryById } from "@/lib/accessory-store";
 
 const currency = new Intl.NumberFormat("es-GT", {
   style: "currency",
@@ -18,7 +18,7 @@ interface AccessoryDetailPageProps {
 
 export default async function AccessoryDetailPage({ params }: AccessoryDetailPageProps) {
   const { id } = await params;
-  const accessory = accessories.find((a) => a.id === id);
+  const accessory = await getAccessoryById(id);
 
   if (!accessory) {
     notFound();
