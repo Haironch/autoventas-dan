@@ -37,6 +37,9 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
         <Link href="/admin/accesorios" className="hover:text-foreground transition-colors">
           Accesorios
         </Link>
+        <Link href="/admin/fallas" className="hover:text-foreground transition-colors">
+          Fallas
+        </Link>
       </nav>
 
       {children}

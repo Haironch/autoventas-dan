@@ -109,10 +109,12 @@ export default async function VehicleDetailPage({ params }: VehicleDetailPagePro
             >
               Cotizar este vehículo
             </button>
-            <span className="inline-flex items-center gap-2 text-xs text-muted border border-border rounded-lg px-3 py-2.5">
-              Historial de fallas comunes
-              <span className="text-[10px] border border-border rounded-full px-2 py-0.5">Próximamente</span>
-            </span>
+            <Link
+              href={`/fallas?marca=${encodeURIComponent(vehicle.brand)}&modelo=${encodeURIComponent(vehicle.model)}&anio=${vehicle.year}`}
+              className="inline-flex items-center gap-2 text-sm text-muted hover:text-foreground border border-border rounded-lg px-3 py-2.5 transition-colors"
+            >
+              Ver historial de fallas comunes
+            </Link>
           </div>
         </div>
       </Card>

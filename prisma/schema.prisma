@@ -86,3 +86,23 @@ model Accessory {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+enum IssueSeverity {
+  LEVE
+  MODERADA
+  GRAVE
+}
+
+model CommonIssue {
+  id                  String        @id @default(cuid())
+  brand               String
+  model               String
+  yearFrom            Int
+  yearTo              Int
+  title               String
+  description         String
+  severity            IssueSeverity
+  estimatedRepairCost Int?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+}

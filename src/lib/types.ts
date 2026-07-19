@@ -46,3 +46,17 @@ export interface Accessory {
   inStock: boolean;
   description: string;
 }
+
+export type IssueSeverity = "Leve" | "Moderada" | "Grave";
+
+export interface CommonIssue {
+  id: string;
+  brand: string;
+  model: string;
+  yearFrom: number;
+  yearTo: number;
+  title: string;
+  description: string;
+  severity: IssueSeverity;
+  estimatedRepairCost: number | null;
+}
