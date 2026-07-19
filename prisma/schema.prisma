@@ -106,3 +106,28 @@ model CommonIssue {
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 }
+
+enum AppointmentType {
+  EVALUACION_VENTA
+  VER_VEHICULO
+  ASESORIA
+}
+
+enum AppointmentStatus {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+}
+
+model Appointment {
+  id            String            @id @default(cuid())
+  name          String
+  phone         String
+  type          AppointmentType
+  preferredDate DateTime
+  preferredTime String
+  notes         String?
+  status        AppointmentStatus @default(PENDIENTE)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}

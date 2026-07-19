@@ -60,3 +60,18 @@ export interface CommonIssue {
   severity: IssueSeverity;
   estimatedRepairCost: number | null;
 }
+
+export type AppointmentType = "Evaluación para venta" | "Ver un vehículo" | "Asesoría general";
+export type AppointmentStatus = "Pendiente" | "Confirmada" | "Cancelada";
+
+export interface Appointment {
+  id: string;
+  name: string;
+  phone: string;
+  type: AppointmentType;
+  /** Fecha en formato YYYY-MM-DD. */
+  preferredDate: string;
+  preferredTime: string;
+  notes: string | null;
+  status: AppointmentStatus;
+}

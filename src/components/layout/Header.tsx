@@ -31,6 +31,9 @@ export function Header() {
           <Link href="/vender" className="hover:text-foreground transition-colors">
             Vender
           </Link>
+          <Link href="/agendar" className="hover:text-foreground transition-colors">
+            Agendar
+          </Link>
         </nav>
 
         <div className="flex items-center gap-3">

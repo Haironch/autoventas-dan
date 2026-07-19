@@ -1,6 +1,7 @@
 "use client";
 
 import { MessageCircleQuestion, X } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 
@@ -146,6 +147,13 @@ export function AdvisoryModal() {
             >
               Enviar por WhatsApp
             </button>
+
+            <Link
+              href="/agendar"
+              className="block text-center text-xs text-muted hover:text-foreground transition-colors"
+            >
+              ¿Prefieres una cita presencial? Agenda aquí
+            </Link>
           </div>
         </div>
       )}

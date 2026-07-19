@@ -40,6 +40,9 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
         <Link href="/admin/fallas" className="hover:text-foreground transition-colors">
           Fallas
         </Link>
+        <Link href="/admin/citas" className="hover:text-foreground transition-colors">
+          Citas
+        </Link>
       </nav>
 
       {children}
