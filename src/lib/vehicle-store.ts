@@ -41,17 +41,19 @@ const STATUS_FROM_DB: Record<string, VehicleStatus> = {
   VENDIDO: "Vendido",
 };
 
-const BODY_TYPE_TO_DB: Record<BodyType, "SEDAN" | "HATCHBACK" | "SUV" | "PICKUP"> = {
+const BODY_TYPE_TO_DB: Record<BodyType, "SEDAN" | "HATCHBACK" | "SUV" | "PICKUP" | "COUPE"> = {
   Sedán: "SEDAN",
   Hatchback: "HATCHBACK",
   SUV: "SUV",
   Pickup: "PICKUP",
+  Coupé: "COUPE",
 };
 const BODY_TYPE_FROM_DB: Record<string, BodyType> = {
   SEDAN: "Sedán",
   HATCHBACK: "Hatchback",
   SUV: "SUV",
   PICKUP: "Pickup",
+  COUPE: "Coupé",
 };
 
 function toAppVehicle(record: VehicleRecord): Vehicle {

@@ -27,6 +27,7 @@ export function VehicleForm({ vehicle, action, submitLabel }: VehicleFormProps) 
           <option value="Hatchback">Hatchback</option>
           <option value="SUV">SUV</option>
           <option value="Pickup">Pickup</option>
+          <option value="Coupé">Coupé</option>
         </Select>
       </div>
 

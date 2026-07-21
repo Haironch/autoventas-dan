@@ -28,11 +28,12 @@ const STATUS_MAP: Record<AppVehicleStatus, "DISPONIBLE" | "RESERVADO" | "VENDIDO
   Vendido: "VENDIDO",
 };
 
-const BODY_TYPE_MAP: Record<AppBodyType, "SEDAN" | "HATCHBACK" | "SUV" | "PICKUP"> = {
+const BODY_TYPE_MAP: Record<AppBodyType, "SEDAN" | "HATCHBACK" | "SUV" | "PICKUP" | "COUPE"> = {
   Sedán: "SEDAN",
   Hatchback: "HATCHBACK",
   SUV: "SUV",
   Pickup: "PICKUP",
+  Coupé: "COUPE",
 };
 
 const PRODUCT_CATEGORY_MAP: Record<

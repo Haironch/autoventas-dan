@@ -11,7 +11,7 @@ import type { BodyType } from "@/lib/types";
 
 type VehicleCondition = "Running" | "Salvage" | "Rebuilt";
 
-const BODY_TYPES: BodyType[] = ["Sedán", "Hatchback", "SUV", "Pickup"];
+const BODY_TYPES: BodyType[] = ["Sedán", "Hatchback", "SUV", "Pickup", "Coupé"];
 const CONDITIONS: VehicleCondition[] = ["Running", "Salvage", "Rebuilt"];
 const CURRENT_YEAR = new Date().getFullYear();
 

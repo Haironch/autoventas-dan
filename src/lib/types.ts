@@ -1,7 +1,7 @@
 export type Transmission = "Automático" | "Manual";
 export type FuelType = "Gasolina" | "Diésel" | "Híbrido" | "Eléctrico";
 export type VehicleStatus = "Disponible" | "Reservado" | "Vendido";
-export type BodyType = "Sedán" | "Hatchback" | "SUV" | "Pickup";
+export type BodyType = "Sedán" | "Hatchback" | "SUV" | "Pickup" | "Coupé";
 
 export interface Vehicle {
   id: string;

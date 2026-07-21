@@ -11,7 +11,7 @@ import type { BodyType, Transmission, FuelType } from "@/lib/types";
 
 type Condition = "Excelente" | "Bueno" | "Regular" | "Necesita reparaciones";
 
-const BODY_TYPES: BodyType[] = ["Sedán", "Hatchback", "SUV", "Pickup"];
+const BODY_TYPES: BodyType[] = ["Sedán", "Hatchback", "SUV", "Pickup", "Coupé"];
 const TRANSMISSIONS: Transmission[] = ["Automático", "Manual"];
 const FUEL_TYPES: FuelType[] = ["Gasolina", "Diésel", "Híbrido", "Eléctrico"];
 const CONDITIONS: Condition[] = ["Excelente", "Bueno", "Regular", "Necesita reparaciones"];
