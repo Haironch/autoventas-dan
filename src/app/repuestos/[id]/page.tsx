@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ChevronLeft, PackageSearch } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -14,6 +15,20 @@ const currency = new Intl.NumberFormat("es-GT", {
 
 interface ProductDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const product = await getProductById(id);
+
+  if (!product) {
+    return { title: "Repuesto no encontrado" };
+  }
+
+  return {
+    title: product.name,
+    description: `${product.name} — ${currency.format(product.price)}. ${product.description}`,
+  };
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {

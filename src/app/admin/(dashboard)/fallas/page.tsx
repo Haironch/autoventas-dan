@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { listCommonIssues } from "@/lib/common-issue-store";
 import type { IssueSeverity } from "@/lib/types";
 import { deleteCommonIssueAction } from "./actions";
+
+export const metadata: Metadata = {
+  title: "Admin · Fallas comunes",
+};
 
 const SEVERITY_BADGE: Record<IssueSeverity, "success" | "accent" | "danger"> = {
   Leve: "success",

@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ADMIN_SESSION_COOKIE } from "@/proxy";
+
+export const metadata: Metadata = {
+  title: "Acceso administrador",
+};
 
 async function login(formData: FormData) {
   "use server";

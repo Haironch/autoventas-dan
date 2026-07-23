@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Car, ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +21,28 @@ const currency = new Intl.NumberFormat("es-GT", {
 
 interface VehicleDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: VehicleDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const vehicle = await getVehicleById(id);
+
+  if (!vehicle) {
+    return { title: "Vehículo no encontrado" };
+  }
+
+  const title = `${vehicle.brand} ${vehicle.model} ${vehicle.year}`;
+  const description = `${title} en ${currency.format(vehicle.price)} — ${vehicle.mileageKm.toLocaleString("es-GT")} km, ${vehicle.transmission}, ${vehicle.fuelType}. ${vehicle.description}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: vehicle.images.length > 0 ? vehicle.images : undefined,
+    },
+  };
 }
 
 export default async function VehicleDetailPage({ params }: VehicleDetailPageProps) {

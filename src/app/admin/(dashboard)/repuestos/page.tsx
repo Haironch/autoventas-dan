@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { listProducts } from "@/lib/product-store";
 import { deleteProductAction } from "./actions";
+
+export const metadata: Metadata = {
+  title: "Admin · Repuestos",
+};
 
 const currency = new Intl.NumberFormat("es-GT", {
   style: "currency",

@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { Select } from "@/components/ui/Select";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { listVehicles } from "@/lib/vehicle-store";
 import type { Vehicle } from "@/lib/types";
+
+export const metadata: Metadata = {
+  title: "Comparador de vehículos",
+  description: "Compara hasta 3 vehículos lado a lado según tus necesidades, no solo sus especificaciones.",
+};
 
 const currency = new Intl.NumberFormat("es-GT", {
   style: "currency",

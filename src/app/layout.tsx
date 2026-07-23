@@ -17,7 +17,11 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Autoventas Dan",
+  metadataBase: new URL("https://autoventas-dan.vercel.app"),
+  title: {
+    default: "Autoventas Dan — Compra, vende e importa vehículos en Guatemala",
+    template: "%s | Autoventas Dan",
+  },
   description: "Compra, vende, importa y recibe asesoría automotriz en un solo lugar.",
 };
 

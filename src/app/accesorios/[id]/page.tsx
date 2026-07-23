@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ChevronLeft, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -14,6 +15,20 @@ const currency = new Intl.NumberFormat("es-GT", {
 
 interface AccessoryDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: AccessoryDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const accessory = await getAccessoryById(id);
+
+  if (!accessory) {
+    return { title: "Accesorio no encontrado" };
+  }
+
+  return {
+    title: accessory.name,
+    description: `${accessory.name} — ${currency.format(accessory.price)}. ${accessory.description}`,
+  };
 }
 
 export default async function AccessoryDetailPage({ params }: AccessoryDetailPageProps) {

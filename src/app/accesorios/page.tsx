@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { AccessoryCard } from "@/components/accessory-card";
 import { Select } from "@/components/ui/Select";
 import { listAccessories } from "@/lib/accessory-store";
+
+export const metadata: Metadata = {
+  title: "Accesorios",
+  description: "Accesorios para tu vehículo: perillas, persianas, tapetes y más, filtrados por marca.",
+};
 
 interface AccesoriosPageProps {
   searchParams: Promise<{ marca?: string }>;

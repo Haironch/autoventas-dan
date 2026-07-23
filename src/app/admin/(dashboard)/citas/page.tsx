@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { listAppointments } from "@/lib/appointment-store";
 import type { AppointmentStatus } from "@/lib/types";
 import { deleteAppointmentAction, updateAppointmentStatusAction } from "./actions";
+
+export const metadata: Metadata = {
+  title: "Admin · Citas",
+};
 
 const STATUS_BADGE: Record<AppointmentStatus, "accent" | "success" | "danger"> = {
   Pendiente: "accent",

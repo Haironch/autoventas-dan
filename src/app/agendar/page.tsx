@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { CheckCircle2 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { TextField } from "@/components/ui/Input";
@@ -5,6 +6,11 @@ import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { createAppointmentAction } from "./actions";
+
+export const metadata: Metadata = {
+  title: "Agenda tu cita",
+  description: "Reserva una cita presencial para evaluar tu vehículo, ver uno del catálogo o recibir asesoría.",
+};
 
 const TIME_SLOTS = ["09:00", "10:00", "11:00", "12:00", "14:00", "15:00", "16:00"];
 

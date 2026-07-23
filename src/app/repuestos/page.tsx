@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { ProductCard } from "@/components/product-card";
 import { Select } from "@/components/ui/Select";
 import { listProducts } from "@/lib/product-store";
 import type { ProductCategory } from "@/lib/types";
+
+export const metadata: Metadata = {
+  title: "Repuestos",
+  description: "Encuentra repuestos originales y compatibles para tu vehículo: frenos, filtros, iluminación y más.",
+};
 
 const CATEGORIES: ProductCategory[] = ["Frenos", "Filtros", "Iluminación", "Lubricantes", "Accesorios"];
 

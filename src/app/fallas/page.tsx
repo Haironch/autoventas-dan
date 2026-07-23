@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -5,6 +6,11 @@ import { Select } from "@/components/ui/Select";
 import { TextField } from "@/components/ui/Input";
 import { listCommonIssues, searchCommonIssues } from "@/lib/common-issue-store";
 import type { IssueSeverity } from "@/lib/types";
+
+export const metadata: Metadata = {
+  title: "Historial de fallas comunes",
+  description: "Busca por marca, modelo y año los problemas mecánicos más reportados antes de comprar.",
+};
 
 const currency = new Intl.NumberFormat("es-GT", {
   style: "currency",
