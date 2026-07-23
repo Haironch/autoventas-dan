@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { href: "/accesorios", label: "Accesorios" },
   { href: "/importar", label: "Importar" },
   { href: "/vender", label: "Vender" },
+  { href: "/fallas", label: "Fallas comunes" },
   { href: "/agendar", label: "Agendar" },
 ];
 
