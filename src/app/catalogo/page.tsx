@@ -3,10 +3,14 @@ import { VehicleCard } from "@/components/vehicle-card";
 import { Select } from "@/components/ui/Select";
 import { SearchInput } from "@/components/ui/Input";
 import { listVehicles } from "@/lib/vehicle-store";
+import { BUSINESS_CITY, BUSINESS_REGION } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Catálogo de vehículos",
-  description: "Explora vehículos verificados en venta en Guatemala: sedanes, SUVs, pickups, hatchbacks y coupés.",
+  description: `Explora vehículos verificados en venta en ${BUSINESS_CITY}, ${BUSINESS_REGION}: sedanes, SUVs, pickups, hatchbacks y coupés.`,
+  alternates: {
+    canonical: "/catalogo",
+  },
 };
 
 const KM_OPTIONS = [50000, 75000, 100000];

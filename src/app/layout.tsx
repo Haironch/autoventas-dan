@@ -3,6 +3,7 @@ import { Inter, Manrope } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/lib/cart-context";
+import { BUSINESS_CITY, BUSINESS_REGION, SITE_URL, WHATSAPP_NUMBER } from "@/lib/constants";
 import "./globals.css";
 
 const inter = Inter({
@@ -17,12 +18,32 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://autoventas-dan.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Autoventas Dan — Compra, vende e importa vehículos en Guatemala",
+    default: `Autoventas Dan — Compra, vende e importa vehículos en ${BUSINESS_CITY}, ${BUSINESS_REGION}`,
     template: "%s | Autoventas Dan",
   },
-  description: "Compra, vende, importa y recibe asesoría automotriz en un solo lugar.",
+  description: `Autoventas Dan: compra, vende, importa y recibe asesoría automotriz en ${BUSINESS_CITY}, ${BUSINESS_REGION}. Catálogo verificado de vehículos, repuestos y accesorios.`,
+  alternates: {
+    canonical: "/",
+  },
+};
+
+const businessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  name: "Autoventas Dan",
+  url: SITE_URL,
+  telephone: `+${WHATSAPP_NUMBER}`,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: BUSINESS_CITY,
+    addressCountry: "GT",
+  },
+  areaServed: {
+    "@type": "City",
+    name: BUSINESS_CITY,
+  },
 };
 
 export default function RootLayout({
@@ -36,6 +57,10 @@ export default function RootLayout({
       className={`${inter.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }}
+        />
         <CartProvider>
           <Header />
           <div className="flex-1 flex flex-col">{children}</div>

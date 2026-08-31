@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { getVehicleById } from "@/lib/vehicle-store";
+import { BUSINESS_CITY, SITE_URL } from "@/lib/constants";
+import type { Vehicle } from "@/lib/types";
 
 const statusBadgeVariant = {
   Disponible: "success",
@@ -37,10 +39,47 @@ export async function generateMetadata({ params }: VehicleDetailPageProps): Prom
   return {
     title,
     description,
+    alternates: {
+      canonical: `/catalogo/${id}`,
+    },
     openGraph: {
       title,
       description,
       images: vehicle.images.length > 0 ? vehicle.images : undefined,
+    },
+  };
+}
+
+const AVAILABILITY_SCHEMA: Record<Vehicle["status"], string> = {
+  Disponible: "https://schema.org/InStock",
+  Reservado: "https://schema.org/LimitedAvailability",
+  Vendido: "https://schema.org/SoldOut",
+};
+
+function vehicleJsonLd(vehicle: Vehicle, id: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Vehicle",
+    name: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`,
+    brand: vehicle.brand,
+    model: vehicle.model,
+    vehicleModelDate: String(vehicle.year),
+    mileageFromOdometer: {
+      "@type": "QuantitativeValue",
+      value: vehicle.mileageKm,
+      unitCode: "KMT",
+    },
+    vehicleTransmission: vehicle.transmission,
+    fuelType: vehicle.fuelType,
+    description: vehicle.description,
+    image: vehicle.images.length > 0 ? vehicle.images : undefined,
+    offers: {
+      "@type": "Offer",
+      price: vehicle.price,
+      priceCurrency: "GTQ",
+      availability: AVAILABILITY_SCHEMA[vehicle.status],
+      url: `${SITE_URL}/catalogo/${id}`,
+      areaServed: BUSINESS_CITY,
     },
   };
 }
@@ -65,6 +104,10 @@ export default async function VehicleDetailPage({ params }: VehicleDetailPagePro
 
   return (
     <main className="max-w-3xl mx-auto w-full px-6 py-10 space-y-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(vehicleJsonLd(vehicle, id)) }}
+      />
       <Link href="/catalogo" className="inline-flex items-center gap-1 text-sm text-muted hover:text-foreground transition-colors">
         <ChevronLeft className="size-4" aria-hidden="true" />
         Volver al catálogo
