@@ -1,33 +1,27 @@
 import type { Metadata } from "next";
-import { Select } from "@/components/ui/Select";
+import { CompareSlotPicker } from "@/components/compare-slot-picker";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
+import {
+  externalColumn,
+  inventoryColumn,
+  visibleRows,
+  type CompareColumn,
+} from "@/lib/compare-columns";
+import { getExternalVehicle, parseExternalId, type ExternalVehicle } from "@/lib/fuel-economy";
 import { listVehicles } from "@/lib/vehicle-store";
 import type { Vehicle } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Comparador de vehículos",
-  description: "Compara hasta 3 vehículos lado a lado según tus necesidades, no solo sus especificaciones.",
+  description:
+    "Compara autos lado a lado: los de nuestro inventario y cualquier otro modelo, con datos técnicos de consumo, motor y transmisión.",
+  alternates: {
+    canonical: "/comparar",
+  },
 };
 
-const currency = new Intl.NumberFormat("es-GT", {
-  style: "currency",
-  currency: "GTQ",
-  maximumFractionDigits: 0,
-});
-
-const specRows: { label: string; value: (v: Vehicle) => string }[] = [
-  { label: "Categoría", value: (v) => v.bodyType },
-  { label: "Pasajeros", value: (v) => `${v.seats} personas` },
-  { label: "Cilindraje", value: (v) => `${v.engineDisplacementLiters.toFixed(1)}L` },
-  { label: "Consumo", value: (v) => `${v.fuelConsumptionKmPerGalon} km/gal` },
-  { label: "Transmisión", value: (v) => v.transmission },
-  { label: "Combustible", value: (v) => v.fuelType },
-  { label: "Precio", value: (v) => currency.format(v.price) },
-  { label: "Año", value: (v) => String(v.year) },
-  { label: "Kilometraje", value: (v) => `${v.mileageKm.toLocaleString("es-GT")} km` },
-  { label: "Estado", value: (v) => v.status },
-];
+const SLOTS = ["v1", "v2", "v3"] as const;
 
 const FIT_GRID_COLS: Record<number, string> = {
   1: "sm:grid-cols-1",
@@ -39,64 +33,115 @@ interface CompararPageProps {
   searchParams: Promise<{ v1?: string; v2?: string; v3?: string }>;
 }
 
-function vehicleLabel(v: Vehicle) {
-  return `${v.brand} ${v.model} ${v.year}`;
-}
-
 function optionLabel(v: Vehicle) {
   return `${v.brand} ${v.model} ${v.year} · ${v.bodyType}`;
+}
+
+function externalLabel(v: ExternalVehicle, column: CompareColumn) {
+  return `${v.year} ${v.make} ${v.model} · ${column.summary}`;
 }
 
 export default async function CompararPage({ searchParams }: CompararPageProps) {
   const params = await searchParams;
   const vehicles = await listVehicles();
-  const slots = [params.v1, params.v2, params.v3];
-  const selected = slots
-    .map((id) => vehicles.find((v) => v.id === id))
-    .filter((v): v is Vehicle => Boolean(v));
+
+  const resolved = await Promise.all(
+    SLOTS.map(async (slot) => {
+      const value = params[slot] ?? "";
+      const externalId = parseExternalId(value);
+
+      if (externalId) {
+        const external = await getExternalVehicle(externalId);
+        return { slot, value, kind: "external" as const, external };
+      }
+      return { slot, value, kind: "inventory" as const, vehicle: vehicles.find((v) => v.id === value) };
+    }),
+  );
+
+  const columns: CompareColumn[] = [];
+  const externalLabels: Record<string, string> = {};
+  let failedExternal = false;
+
+  for (const item of resolved) {
+    if (item.kind === "external") {
+      if (!item.external) {
+        if (item.value) failedExternal = true;
+        continue;
+      }
+      const column = externalColumn(item.external);
+      columns.push(column);
+      externalLabels[item.slot] = externalLabel(item.external, column);
+    } else if (item.vehicle) {
+      columns.push(inventoryColumn(item.vehicle));
+    }
+  }
+
+  const rows = visibleRows(columns);
+  const hasExternal = columns.some((column) => column.source === "external");
+  const inventoryOptions = vehicles.map((v) => ({ value: v.id, label: optionLabel(v) }));
 
   return (
     <main className="max-w-4xl mx-auto w-full px-6 py-10 space-y-6">
       <div>
-        <h1 className="font-heading font-bold text-2xl">Encuentra el vehículo que se adapta a ti</h1>
+        <h1 className="font-heading font-bold text-2xl">Compara cualquier auto, tengamos o no el modelo</h1>
         <p className="text-sm text-muted mt-1 max-w-lg">
-          Compara entre categorías —un sedán, un SUV o una pickup— para ver cuál se ajusta mejor a lo
-          que necesitas, no solo cuál es &ldquo;mejor&rdquo; en papel.
+          Elige hasta 3 vehículos: los de nuestro inventario o cualquier otro modelo, para ver cuál se
+          ajusta mejor a lo que necesitas, no solo cuál es &ldquo;mejor&rdquo; en papel.
         </p>
       </div>
 
-      <form action="/comparar" method="GET" className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
-        {(["v1", "v2", "v3"] as const).map((name, i) => (
-          <Select key={name} label={`Vehículo ${i + 1}`} name={name} defaultValue={params[name] ?? ""}>
-            <option value="">Sin seleccionar</option>
-            {vehicles.map((v) => (
-              <option key={v.id} value={v.id}>
-                {optionLabel(v)}
-              </option>
-            ))}
-          </Select>
-        ))}
+      <form action="/comparar" method="GET" className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+          {SLOTS.map((slot, i) => (
+            <CompareSlotPicker
+              key={`${slot}-${params[slot] ?? ""}`}
+              name={slot}
+              label={`Vehículo ${i + 1}`}
+              inventory={inventoryOptions}
+              initialValue={params[slot] ?? ""}
+              initialExternalLabel={externalLabels[slot]}
+            />
+          ))}
+        </div>
         <button
           type="submit"
-          className="font-heading font-bold text-sm px-4.5 py-2 rounded-lg bg-accent text-accent-foreground hover:bg-accent-hover transition-colors h-9"
+          className="font-heading font-bold text-sm px-4.5 py-2.5 rounded-lg bg-accent text-accent-foreground hover:bg-accent-hover transition-colors"
         >
           Comparar
         </button>
       </form>
 
-      {selected.length === 0 ? (
+      {failedExternal && (
+        <p className="text-sm text-danger">
+          No pudimos cargar los datos de uno de los autos seleccionados. Intenta elegirlo de nuevo.
+        </p>
+      )}
+
+      {columns.length === 0 ? (
         <p className="text-sm text-muted text-center py-16">
           Selecciona al menos un vehículo para comenzar la comparación.
         </p>
       ) : (
         <>
-          <div className={`grid grid-cols-1 gap-4 ${FIT_GRID_COLS[selected.length]}`}>
-            {selected.map((v) => (
-              <Card key={v.id} className="p-4">
-                <Badge variant="petrol">{v.bodyType}</Badge>
-                <p className="font-heading font-bold text-sm mt-2">{vehicleLabel(v)}</p>
-                <p className="text-xs text-muted mt-1.5">Ideal para</p>
-                <p className="text-sm mt-0.5 leading-relaxed">{v.idealFor}</p>
+          <div className={`grid grid-cols-1 gap-4 ${FIT_GRID_COLS[columns.length]}`}>
+            {columns.map((column) => (
+              <Card key={column.key} className="p-4 flex flex-col">
+                <div>
+                  <Badge variant={column.source === "inventory" ? "petrol" : "accent"}>{column.badge}</Badge>
+                </div>
+                <p className="font-heading font-bold text-sm mt-2">{column.title}</p>
+                <p className="text-xs text-muted mt-1.5">{column.summaryLabel}</p>
+                <p className="text-sm mt-0.5 leading-relaxed">{column.summary}</p>
+                {column.cta && (
+                  <a
+                    href={column.cta.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 text-sm text-accent hover:text-accent-hover transition-colors"
+                  >
+                    {column.cta.label}
+                  </a>
+                )}
               </Card>
             ))}
           </div>
@@ -106,20 +151,20 @@ export default async function CompararPage({ searchParams }: CompararPageProps) 
               <thead>
                 <tr>
                   <th className="text-left text-xs text-muted font-normal p-4 align-bottom">Especificación</th>
-                  {selected.map((v) => (
-                    <th key={v.id} className="text-left p-4 align-bottom">
-                      <p className="font-heading font-bold text-sm">{vehicleLabel(v)}</p>
+                  {columns.map((column) => (
+                    <th key={column.key} className="text-left p-4 align-bottom">
+                      <p className="font-heading font-bold text-sm">{column.title}</p>
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {specRows.map((row) => (
-                  <tr key={row.label} className="border-t border-border">
+                {rows.map((row) => (
+                  <tr key={row.key} className="border-t border-border">
                     <td className="p-4 text-xs text-muted">{row.label}</td>
-                    {selected.map((v) => (
-                      <td key={v.id} className="p-4 font-medium">
-                        {row.value(v)}
+                    {columns.map((column) => (
+                      <td key={column.key} className="p-4 font-medium">
+                        {column.rows[row.key]}
                       </td>
                     ))}
                   </tr>
@@ -127,6 +172,14 @@ export default async function CompararPage({ searchParams }: CompararPageProps) 
               </tbody>
             </table>
           </Card>
+
+          {hasExternal && (
+            <p className="text-xs text-muted leading-relaxed">
+              Los autos marcados como referencia usan datos de fueleconomy.gov (mercado de EE. UU.). El
+              consumo se muestra en km por galón y puede variar según la versión y el mercado. Para precio
+              y disponibilidad, consúltanos por WhatsApp.
+            </p>
+          )}
         </>
       )}
     </main>
