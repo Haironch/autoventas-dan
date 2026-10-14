@@ -1,3 +1,4 @@
+import { computeScores, type CategoryKey, type DriveKey, type Scores } from "@/lib/compare-scores";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import type { ExternalVehicle } from "@/lib/fuel-economy";
 import type { Vehicle } from "@/lib/types";
@@ -42,6 +43,7 @@ export interface CompareColumn {
   summaryLabel: string;
   summary: string;
   rows: Record<RowKey, string>;
+  scores: Scores;
   cta?: { href: string; label: string };
 }
 
@@ -50,6 +52,22 @@ const currency = new Intl.NumberFormat("es-GT", {
   currency: "GTQ",
   maximumFractionDigits: 0,
 });
+
+const BODY_TYPE_CATEGORY: Record<Vehicle["bodyType"], CategoryKey> = {
+  Sedán: "midsize",
+  Hatchback: "hatchback",
+  SUV: "suv",
+  Pickup: "pickup",
+  Coupé: "coupe",
+};
+
+/** El inventario no tiene un campo de tracción: se deduce del nombre ("RAV4 Sport 4x4", "CRV AWD EX"). */
+function driveFromName(vehicle: Vehicle): DriveKey | null {
+  const name = `${vehicle.brand} ${vehicle.model}`;
+  if (/\b(4x4|4wd)\b/i.test(name)) return "4x4";
+  if (/\bawd\b/i.test(name)) return "awd";
+  return null;
+}
 
 export function inventoryColumn(vehicle: Vehicle): CompareColumn {
   return {
@@ -73,6 +91,16 @@ export function inventoryColumn(vehicle: Vehicle): CompareColumn {
       mileage: `${vehicle.mileageKm.toLocaleString("es-GT")} km`,
       status: vehicle.status,
     },
+    scores: computeScores({
+      category: BODY_TYPE_CATEGORY[vehicle.bodyType],
+      displacementLiters: vehicle.engineDisplacementLiters,
+      kmPerGallon: vehicle.fuelConsumptionKmPerGalon,
+      isElectric: vehicle.fuelType === "Eléctrico",
+      automatic: vehicle.transmission === "Automático",
+      seats: vehicle.seats,
+      year: vehicle.year,
+      drive: driveFromName(vehicle),
+    }),
   };
 }
 
@@ -108,6 +136,16 @@ export function externalColumn(vehicle: ExternalVehicle): CompareColumn {
       mileage: NO_DATA,
       status: NO_DATA,
     },
+    scores: computeScores({
+      category: vehicle.categoryKey,
+      displacementLiters: vehicle.displacementLiters,
+      kmPerGallon: vehicle.kmPerGallon,
+      isElectric: vehicle.isElectric,
+      automatic: vehicle.automatic,
+      seats: null,
+      year: vehicle.year,
+      drive: vehicle.driveKey,
+    }),
     cta: {
       href: `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
       label: "Consultar disponibilidad",

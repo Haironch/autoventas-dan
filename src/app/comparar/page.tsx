@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CompareScoreChart, type ChartSeries } from "@/components/compare-score-chart";
 import { CompareSlotPicker } from "@/components/compare-slot-picker";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -59,10 +60,13 @@ export default async function CompararPage({ searchParams }: CompararPageProps) 
   );
 
   const columns: CompareColumn[] = [];
+  const chartSeries: ChartSeries[] = [];
   const externalLabels: Record<string, string> = {};
   let failedExternal = false;
 
-  for (const item of resolved) {
+  for (const [slotIndex, item] of resolved.entries()) {
+    const columnCount = columns.length;
+
     if (item.kind === "external") {
       if (!item.external) {
         if (item.value) failedExternal = true;
@@ -73,6 +77,11 @@ export default async function CompararPage({ searchParams }: CompararPageProps) 
       externalLabels[item.slot] = externalLabel(item.external, column);
     } else if (item.vehicle) {
       columns.push(inventoryColumn(item.vehicle));
+    }
+
+    if (columns.length > columnCount) {
+      const column = columns[columns.length - 1];
+      chartSeries.push({ key: column.key, title: column.title, scores: column.scores, slot: slotIndex });
     }
   }
 
@@ -145,6 +154,8 @@ export default async function CompararPage({ searchParams }: CompararPageProps) 
               </Card>
             ))}
           </div>
+
+          {chartSeries.length >= 2 && <CompareScoreChart series={chartSeries} />}
 
           <Card className="overflow-x-auto">
             <table className="w-full text-sm border-collapse min-w-[480px]">

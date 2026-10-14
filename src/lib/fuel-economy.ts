@@ -5,6 +5,7 @@
  */
 
 import { EXTERNAL_VEHICLE_PREFIX } from "@/lib/constants";
+import type { CategoryKey, DriveKey } from "@/lib/compare-scores";
 
 const BASE_URL = "https://www.fueleconomy.gov/ws/rest/vehicle";
 const MENU_REVALIDATE_SECONDS = 60 * 60 * 24;
@@ -30,6 +31,10 @@ export interface ExternalVehicle {
   drive: string;
   category: string;
   isElectric: boolean;
+  /** Valores normalizados para calcular puntajes de comparación. */
+  categoryKey: CategoryKey;
+  driveKey: DriveKey | null;
+  automatic: boolean;
   /** Rendimiento combinado en km por galón (null en eléctricos). */
   kmPerGallon: number | null;
   /** Solo eléctricos: eficiencia combinada en MPGe. */
@@ -136,27 +141,32 @@ function translateFuel(vehicle: RawVehicle): string {
   return "Gasolina";
 }
 
-function translateDrive(raw: string | null | undefined): string {
-  if (!raw) return "—";
-  if (/front/i.test(raw)) return "Delantera (FWD)";
-  if (/rear/i.test(raw)) return "Trasera (RWD)";
-  if (/all-wheel/i.test(raw) && !/4-wheel/i.test(raw)) return "Integral (AWD)";
-  if (/4-wheel|all-wheel/i.test(raw)) return "4x4";
-  return raw;
+function classifyDrive(raw: string | null | undefined): { key: DriveKey | null; label: string } {
+  if (!raw) return { key: null, label: "—" };
+  if (/front/i.test(raw)) return { key: "fwd", label: "Delantera (FWD)" };
+  if (/rear/i.test(raw)) return { key: "rwd", label: "Trasera (RWD)" };
+  if (/all-wheel/i.test(raw) && !/4-wheel/i.test(raw)) return { key: "awd", label: "Integral (AWD)" };
+  if (/4-wheel|all-wheel/i.test(raw)) return { key: "4x4", label: "4x4" };
+  return { key: null, label: raw };
 }
 
-function translateCategory(raw: string | null | undefined): string {
-  if (!raw) return "—";
-  if (/two seater/i.test(raw)) return "Biplaza";
-  if (/station wagon/i.test(raw)) return "Station wagon";
-  if (/pickup/i.test(raw)) return "Pickup";
-  if (/minivan|van/i.test(raw)) return "Van / Minivan";
-  if (/sport utility|suv/i.test(raw)) return "SUV";
-  if (/minicompact|subcompact/i.test(raw)) return "Auto subcompacto";
-  if (/compact/i.test(raw)) return "Auto compacto";
-  if (/midsize/i.test(raw)) return "Auto mediano";
-  if (/large/i.test(raw)) return "Auto grande";
-  return raw;
+// El orden importa: "subcompact" contiene "compact" y "station wagon" contiene "midsize".
+const CATEGORY_RULES: { pattern: RegExp; key: CategoryKey; label: string }[] = [
+  { pattern: /two seater/i, key: "twoseater", label: "Biplaza" },
+  { pattern: /station wagon/i, key: "wagon", label: "Station wagon" },
+  { pattern: /pickup/i, key: "pickup", label: "Pickup" },
+  { pattern: /minivan|van/i, key: "van", label: "Van / Minivan" },
+  { pattern: /sport utility|suv/i, key: "suv", label: "SUV" },
+  { pattern: /minicompact|subcompact/i, key: "subcompact", label: "Auto subcompacto" },
+  { pattern: /compact/i, key: "compact", label: "Auto compacto" },
+  { pattern: /midsize/i, key: "midsize", label: "Auto mediano" },
+  { pattern: /large/i, key: "large", label: "Auto grande" },
+];
+
+function classifyCategory(raw: string | null | undefined): { key: CategoryKey; label: string } {
+  if (!raw) return { key: "midsize", label: "—" };
+  const rule = CATEGORY_RULES.find((candidate) => candidate.pattern.test(raw));
+  return rule ? { key: rule.key, label: rule.label } : { key: "midsize", label: raw };
 }
 
 export function parseExternalId(value: string | undefined): string | null {
@@ -173,6 +183,8 @@ export async function getExternalVehicle(id: string): Promise<ExternalVehicle | 
   const fuel = translateFuel(raw);
   const isElectric = fuel === "Eléctrico";
   const combinedMpg = toNumber(raw.comb08);
+  const drive = classifyDrive(raw.drive);
+  const category = classifyCategory(raw.VClass);
 
   return {
     id,
@@ -183,8 +195,11 @@ export async function getExternalVehicle(id: string): Promise<ExternalVehicle | 
     cylinders: toNumber(raw.cylinders),
     transmission: translateTransmission(raw.trany),
     fuel,
-    drive: translateDrive(raw.drive),
-    category: translateCategory(raw.VClass),
+    drive: drive.label,
+    driveKey: drive.key,
+    category: category.label,
+    categoryKey: category.key,
+    automatic: !/^man/i.test(raw.trany ?? ""),
     isElectric,
     kmPerGallon: !isElectric && combinedMpg ? Math.round(combinedMpg * KM_PER_MILE) : null,
     mpge: isElectric ? combinedMpg : null,
