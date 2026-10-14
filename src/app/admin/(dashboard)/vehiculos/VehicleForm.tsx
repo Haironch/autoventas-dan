@@ -90,7 +90,7 @@ export function VehicleForm({ vehicle, action, submitLabel }: VehicleFormProps) 
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs text-muted">Fotos (máximo 2) — JPG, PNG o WEBP, hasta 8MB</p>
+        <p className="text-xs text-muted">Fotos (máximo 2) — JPG, PNG o WEBP. Se optimizan automáticamente al elegirlas.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <PhotoField name="image1" existingImageName="existingImage1" existingImageUrl={vehicle?.images[0] ?? ""} />
           <PhotoField name="image2" existingImageName="existingImage2" existingImageUrl={vehicle?.images[1] ?? ""} />

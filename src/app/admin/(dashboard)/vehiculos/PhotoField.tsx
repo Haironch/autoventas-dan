@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, type ChangeEvent } from "react";
+import { compressImage } from "@/lib/compress-image";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_SIZE_MB = 8;
+// Tope de la foto original; se comprime en el navegador antes de enviarla.
+const MAX_SIZE_MB = 25;
 
 interface PhotoFieldProps {
   name: string;
@@ -13,9 +15,11 @@ interface PhotoFieldProps {
 
 export function PhotoField({ name, existingImageName, existingImageUrl }: PhotoFieldProps) {
   const [error, setError] = useState<string | null>(null);
+  const [optimizing, setOptimizing] = useState(false);
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
+  async function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    const input = event.currentTarget;
+    const file = input.files?.[0];
     if (!file) {
       setError(null);
       return;
@@ -39,6 +43,18 @@ export function PhotoField({ name, existingImageName, existingImageUrl }: PhotoF
     }
 
     setError(null);
+    setOptimizing(true);
+    try {
+      const optimized = await compressImage(file);
+      const transfer = new DataTransfer();
+      transfer.items.add(optimized);
+      input.files = transfer.files;
+    } catch {
+      setError("No se pudo procesar la foto. Prueba con otra imagen en JPG, PNG o WEBP.");
+      input.value = "";
+    } finally {
+      setOptimizing(false);
+    }
   }
 
   return (
@@ -60,6 +76,7 @@ export function PhotoField({ name, existingImageName, existingImageUrl }: PhotoF
           onChange={handleChange}
           className="w-full text-xs text-muted file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-accent-soft file:text-accent-soft-foreground file:font-medium file:text-xs hover:file:bg-accent-soft file:cursor-pointer cursor-pointer"
         />
+        {optimizing && <p className="text-xs text-muted">Optimizando foto…</p>}
         {error && <p className="text-xs text-danger leading-relaxed">{error}</p>}
       </div>
     </div>
