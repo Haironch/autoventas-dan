@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
+import { ConfirmDeleteButton } from "@/components/confirm-delete-button";
 import { listProducts } from "@/lib/product-store";
 import { deleteProductAction } from "./actions";
 
@@ -53,9 +54,9 @@ export default async function AdminProductsPage() {
               </Link>
               <form action={deleteProductAction}>
                 <input type="hidden" name="id" value={p.id} />
-                <button type="submit" className="text-sm text-danger hover:opacity-80 transition-opacity">
+                <ConfirmDeleteButton className="text-sm text-danger hover:opacity-80 transition-opacity" message="¿Eliminar este repuesto? No se puede deshacer.">
                   Eliminar
-                </button>
+                </ConfirmDeleteButton>
               </form>
             </div>
           </Card>
@@ -92,9 +93,9 @@ export default async function AdminProductsPage() {
                     </Link>
                     <form action={deleteProductAction}>
                       <input type="hidden" name="id" value={p.id} />
-                      <button type="submit" className="text-danger hover:opacity-80 transition-opacity">
+                      <ConfirmDeleteButton className="text-danger hover:opacity-80 transition-opacity" message="¿Eliminar este repuesto? No se puede deshacer.">
                         Eliminar
-                      </button>
+                      </ConfirmDeleteButton>
                     </form>
                   </div>
                 </td>

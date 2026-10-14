@@ -1,9 +1,9 @@
 "use server";
 
-import { put } from "@vercel/blob";
+import { del, put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createVehicle, deleteVehicle, updateVehicle } from "@/lib/vehicle-store";
+import { createVehicle, deleteVehicle, getVehicleById, updateVehicle } from "@/lib/vehicle-store";
 import type { Vehicle } from "@/lib/types";
 
 function revalidateVehiclePages() {
@@ -36,6 +36,18 @@ async function resolveImageSlot(formData: FormData, index: number): Promise<stri
   return typeof existing === "string" && existing ? existing : null;
 }
 
+/** Borra fotos del almacenamiento; si falla no bloquea la operación (solo queda un archivo huérfano). */
+async function deleteBlobImages(urls: string[]) {
+  const blobUrls = urls.filter((url) => url.includes(".public.blob.vercel-storage.com"));
+  if (blobUrls.length === 0) return;
+
+  try {
+    await del(blobUrls);
+  } catch (error) {
+    console.error("No se pudieron borrar fotos de Blob", error);
+  }
+}
+
 async function vehicleFromFormData(formData: FormData): Promise<Omit<Vehicle, "id">> {
   const images = (await Promise.all([resolveImageSlot(formData, 1), resolveImageSlot(formData, 2)])).filter(
     (url): url is string => Boolean(url),
@@ -65,7 +77,9 @@ async function vehicleFromFormData(formData: FormData): Promise<Omit<Vehicle, "i
 export async function deleteVehicleAction(formData: FormData) {
   const id = formData.get("id");
   if (typeof id === "string") {
+    const vehicle = await getVehicleById(id);
     await deleteVehicle(id);
+    if (vehicle) await deleteBlobImages(vehicle.images);
     revalidateVehiclePages();
   }
 }
@@ -77,7 +91,12 @@ export async function createVehicleAction(formData: FormData) {
 }
 
 export async function updateVehicleAction(id: string, formData: FormData) {
-  await updateVehicle(id, await vehicleFromFormData(formData));
+  const previous = await getVehicleById(id);
+  const data = await vehicleFromFormData(formData);
+  const updated = await updateVehicle(id, data);
+  if (updated && previous) {
+    await deleteBlobImages(previous.images.filter((url) => !data.images.includes(url)));
+  }
   revalidateVehiclePages();
   redirect("/admin");
 }

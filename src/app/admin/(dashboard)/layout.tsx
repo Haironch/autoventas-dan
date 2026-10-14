@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ADMIN_SESSION_COOKIE } from "@/proxy";
+import { ADMIN_SESSION_COOKIE } from "@/lib/admin-session";
 
 async function logout() {
   "use server";

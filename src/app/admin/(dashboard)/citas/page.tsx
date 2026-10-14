@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
+import { ConfirmDeleteButton } from "@/components/confirm-delete-button";
 import { listAppointments } from "@/lib/appointment-store";
 import type { AppointmentStatus } from "@/lib/types";
 import { deleteAppointmentAction, updateAppointmentStatusAction } from "./actions";
@@ -43,9 +44,9 @@ function StatusActions({ id, status }: { id: string; status: AppointmentStatus }
       )}
       <form action={deleteAppointmentAction}>
         <input type="hidden" name="id" value={id} />
-        <button type="submit" className="text-sm text-muted hover:text-foreground transition-colors">
+        <ConfirmDeleteButton className="text-sm text-muted hover:text-foreground transition-colors" message="¿Eliminar esta cita? No se puede deshacer.">
           Eliminar
-        </button>
+        </ConfirmDeleteButton>
       </form>
     </div>
   );

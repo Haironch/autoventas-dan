@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { ADMIN_SESSION_COOKIE } from "@/proxy";
+import {
+  ADMIN_SESSION_COOKIE,
+  ADMIN_SESSION_TTL_SECONDS,
+  createSessionToken,
+  safeEqual,
+} from "@/lib/admin-session";
 
 export const metadata: Metadata = {
   title: "Acceso administrador",
@@ -10,16 +15,21 @@ export const metadata: Metadata = {
 async function login(formData: FormData) {
   "use server";
   const password = formData.get("password");
+  const expected = process.env.ADMIN_PASSWORD;
 
-  if (password === process.env.ADMIN_PASSWORD) {
-    const cookieStore = await cookies();
-    cookieStore.set(ADMIN_SESSION_COOKIE, "ok", {
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 8,
-    });
-    redirect("/admin");
+  if (typeof password === "string" && expected && safeEqual(password, expected)) {
+    const token = await createSessionToken();
+    if (token) {
+      const cookieStore = await cookies();
+      cookieStore.set(ADMIN_SESSION_COOKIE, token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: ADMIN_SESSION_TTL_SECONDS,
+      });
+      redirect("/admin");
+    }
   }
 
   redirect("/admin/login?error=1");
